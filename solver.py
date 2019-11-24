@@ -5,7 +5,7 @@
 """
 
 import re
-from itertools import ifilterfalse, chain, ifilter
+from itertools import filterfalse, chain
 import logging
 from copy import deepcopy
 
@@ -30,7 +30,7 @@ class Square(object):
 		return not self.__eq__(other)
 	def __hash__(self):
 		return self.value
-	def __nonzero__(self):
+	def __bool__(self):
 		return bool(self.value)
 	def __repr__(self):
 		return "%r" % (self.value) if self.value else "_"
@@ -122,7 +122,7 @@ class SudokuBoard(object):
 		for related_list in (self.rows[r], self.cols[c], 
 				self.get_cube(r, c, self.rows)):
 			others_options = set()
-			for square in ifilterfalse(lambda s: s is target, related_list):
+			for square in filterfalse(lambda s: s is target, related_list):
 				others_options |= set(square.options)
 			options = target.options - others_options
 			if len(options) == 1:
@@ -173,7 +173,7 @@ class SudokuBoard(object):
 
 		# get the other (row/col) of cubes that share this cubes (row/col)
 		log.debug("Current state of game board:\n%s", self)
-		for p in ifilter(lambda i: i < sec_min or i > sec_min+2, range(9)):
+		for p in filter(lambda i: i < sec_min or i > sec_min+2, list(range(9))):
 			square = sec_dir[p][selected]
 			if not square:
 				d =  "cols" if (pri_dir == self.rows) else "rows"
@@ -329,7 +329,7 @@ def solve(board, print_cycle=10, guess=False):
 
 		counter += 1
 		if board.solved():
-			print "Solved in %d rounds." % counter
+			print("Solved in %d rounds." % counter)
 			return board
 
 		status = board.get_status()
@@ -345,15 +345,15 @@ def solve(board, print_cycle=10, guess=False):
 				new_board.rows[r][c].set(set([choice]))
 				if solve(new_board, guess=True):
 					return new_board
-			print new_board
-			print new_board.show_options()
+			print(new_board)
+			print(new_board.show_options())
 			return None
 
 		prev_status = status
 
 		if counter % print_cycle == print_cycle - 1:
-			print board
-			print board.show_options()
+			print(board)
+			print(board.show_options())
 
 
 
@@ -363,6 +363,6 @@ if __name__ == "__main__":
 	logging.basicConfig(level=logging.INFO)
 
 	board = solve(SudokuBoard(boards.board_evil2))
-	print board
-	print "Game won!" if board else "Lost!"
+	print(board)
+	print("Game won!" if board else "Lost!")
 

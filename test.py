@@ -13,21 +13,21 @@ class TestSquare(unittest.TestCase):
 
 	def test_init(self):
 		s = Square(9)
-		self.assertEquals(s.value, 9)
-		self.assertEquals(s.options, set())
+		self.assertEqual(s.value, 9)
+		self.assertEqual(s.options, set())
 
 		s = Square(0)
-		self.assertEquals(s.value, 0)
-		self.assertEquals(s.options, set(range(1,10)))
+		self.assertEqual(s.value, 0)
+		self.assertEqual(s.options, set(range(1,10)))
 
 		s = Square('1')
-		self.assertEquals(s.value, 1)
-		self.assertEquals(s.options, set())
+		self.assertEqual(s.value, 1)
+		self.assertEqual(s.options, set())
 
 	def test_eq(self):
 		s = Square(4)
-		self.assertEquals(s, 4)
-		self.assertNotEquals(s, 3)
+		self.assertEqual(s, 4)
+		self.assertNotEqual(s, 3)
 
 	def test_nonzero(self):
 		s = Square(1)
@@ -36,17 +36,17 @@ class TestSquare(unittest.TestCase):
 
 	def test_repr(self):
 		s = Square(3)
-		self.assertEquals("%r" % self.s, "_")
-		self.assertEquals("%s" % s, "3")
+		self.assertEqual("%r" % self.s, "_")
+		self.assertEqual("%s" % s, "3")
 
 	def test_set(self):
 		options = set([1,4,5])
 		self.assertFalse(self.s.set(options))
-		self.assertEquals(self.s.options, options)
+		self.assertEqual(self.s.options, options)
 
 		self.assertTrue(self.s.set(set([1])))
-		self.assertEquals(self.s.options, set([]))
-		self.assertEquals(self.s.value, 1)
+		self.assertEqual(self.s.options, set([]))
+		self.assertEqual(self.s.value, 1)
 
 	def test_check(self):
 		s = Square(0)
@@ -90,8 +90,8 @@ class TestSudobuBoard(unittest.TestCase):
 
 
 	def test_init(self):
-		self.assertEquals(type(self.board.rows[0][2]), type(Square(4)))
-		self.assertEquals(self.board.rows[8][3], Square(5))
+		self.assertEqual(type(self.board.rows[0][2]), type(Square(4)))
+		self.assertEqual(self.board.rows[8][3], Square(5))
 
 
 	def test_repr(self):
@@ -116,8 +116,8 @@ class TestSudobuBoard(unittest.TestCase):
 		# TODO
 
 	def test_get_cube(self):
-		self.assertEquals(self.board.get_cube(2, 1, self.board.rows), [1,0,4,8,0,9,0,0,0])
-		self.assertEquals(self.board.get_cube(8,8, self.board.rows), [0,3,0,0,8,0,0,0,0])
+		self.assertEqual(self.board.get_cube(2, 1, self.board.rows), [1,0,4,8,0,9,0,0,0])
+		self.assertEqual(self.board.get_cube(8,8, self.board.rows), [0,3,0,0,8,0,0,0,0])
 
 
 	def test_solved(self):
@@ -127,11 +127,11 @@ class TestSudobuBoard(unittest.TestCase):
 
 	def test_get_status(self):
 		solved = SudokuBoard(self._solved)
-		self.assertEquals(self.board.get_status(), (32,441))
-		self.assertEquals(solved.get_status(), (81, 0))
+		self.assertEqual(self.board.get_status(), (32,441))
+		self.assertEqual(solved.get_status(), (81, 0))
 
 	def test_all_squares(self):
-		self.assertEquals(len(list(self.board.all_squares())), 81)
+		self.assertEqual(len(list(self.board.all_squares())), 81)
 
 	def test_check_board(self):
 		" check no errors thrown. "
