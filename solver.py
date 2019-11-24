@@ -12,16 +12,16 @@ from copy import deepcopy
 log = logging
 
 class Square(object):
-	""" 
+	"""
 	A square on the board.
-	This object is used so that there is a reference to the area, and i can 
-	index by both rows and columns. It evaluates to the number it holds to 
+	This object is used so that there is a reference to the area, and i can
+	index by both rows and columns. It evaluates to the number it holds to
 	simplify checks for complete games, and possible moves.
 	"""
 	def __init__(self, num):
 		self.value = int(num)
 		self.options = set() if self.value else set(range(1,10))
-		
+
 	def __eq__(self, other):
 		if hasattr(other, 'value'):
 			return self.value == other.value
@@ -39,10 +39,10 @@ class Square(object):
 		return self.check()
 	def check(self):
 		if len(self.options) == 1:
-			self.value = self.options.pop() 
+			self.value = self.options.pop()
 			return True
 		return False
-		
+
 
 class SudokuBoard(object):
 	" Model of a Sudoku board, with convenience functions "
@@ -100,9 +100,9 @@ class SudokuBoard(object):
 	def find_options_for(self, r, c, index):
 		"""
 		Return a list of possible options for a square on the board. Checks
-		the row, column, and cube for existing numbers. 
+		the row, column, and cube for existing numbers.
 		"""
-		
+
 		other_index = self.cols if index == self.rows else self.rows
 
 		options = index[r][c].options
@@ -119,7 +119,7 @@ class SudokuBoard(object):
 		"""
 		target = self.rows[r][c]
 
-		for related_list in (self.rows[r], self.cols[c], 
+		for related_list in (self.rows[r], self.cols[c],
 				self.get_cube(r, c, self.rows)):
 			others_options = set()
 			for square in filterfalse(lambda s: s is target, related_list):
@@ -132,8 +132,8 @@ class SudokuBoard(object):
 
 	def find_isolation_lines(self, row_min, col_min):
 		"""
-		Given a coordinate in a cube, find any isolated rows or column which 
-		restrict an option to that row or column.  Then remove that number as 
+		Given a coordinate in a cube, find any isolated rows or column which
+		restrict an option to that row or column.  Then remove that number as
 		an option from any other cubes that are aligned with this cube.
 		"""
 		solitary_rows = set()
@@ -143,16 +143,16 @@ class SudokuBoard(object):
 
 		for r in range(row_min, row_min+3):
 			for c in range(col_min, col_min+3):
-				if not self.rows[r][c]:	
+				if not self.rows[r][c]:
 					solitary_rows.add(r)
 					solitary_cols.add(c)
-			
+
 		if len(solitary_rows) == 1:
-			solved_count += self._update_options(self.rows, self.cols, 
+			solved_count += self._update_options(self.rows, self.cols,
 					solitary_rows.pop(), row_min, col_min)
-			
+
 		if len(solitary_cols) == 1:
-			solved_count += self._update_options(self.cols, self.rows, 
+			solved_count += self._update_options(self.cols, self.rows,
 					solitary_cols.pop(), col_min, row_min)
 
 		return solved_count
@@ -187,8 +187,8 @@ class SudokuBoard(object):
 
 	def get_cube(self, r, c, index):
 		" Return the local cube of 9 squares for a given row and column, as a list. "
-		row_min = r / 3 * 3
-		col_min = c / 3 * 3
+		row_min = r // 3 * 3
+		col_min = c // 3 * 3
 		cube = list(chain(
 			*(r[col_min:col_min+3] for r in index[row_min:row_min+3])))
 		return cube
@@ -216,7 +216,7 @@ class SudokuBoard(object):
 		"""
 		total_solved = 0
 		total_options = 0
-		
+
 		for r in self.rows:
 			for s in r:
 				total_solved += int(bool(s))
@@ -238,7 +238,7 @@ class SudokuBoard(object):
 		"""
 		options = []
 		pairs = []
-		log.debug("Current state of game board:\n%s\n%s", 
+		log.debug("Current state of game board:\n%s\n%s",
 				self, self.show_options())
 		for square in self.get_cube(row_min, col_min, self.rows):
 			if len(square.options) != 2:
@@ -262,8 +262,8 @@ class SudokuBoard(object):
 				log.debug("Removing %s from square in cube (%d,%s)" % (
 							remove_options, row_min, col_min))
 				square.options -= remove_options
-			
-				
+
+
 	def all_squares(self):
 		"""
 		Generator which returns tuples of all the squares on the board
@@ -291,7 +291,7 @@ def find_unsolved_square(board):
 	for (r, c, square) in board.all_squares():
 		if square:
 			continue
-		return (r, c) 
+		return (r, c)
 
 
 def solve(board, print_cycle=10, guess=False):
@@ -324,7 +324,7 @@ def solve(board, print_cycle=10, guess=False):
 
 		for (r, c) in board.all_cubes():
 			board.find_number_pairs_in_cube(r, c)
-	
+
 		board.check_board()
 
 		counter += 1
